@@ -24,7 +24,7 @@ if (Test-Path $source) {
         $portableFile = "$folder\portable"
         New-Item -ItemType File -Path $portableFile -Force | Out-Null
         
-        Write-Host "✅ Created: $folderName" -ForegroundColor Green
+        Write-Host "Created: $folderName" -ForegroundColor Green
     }
     
     # Create shortcuts for each TeleClone
@@ -40,7 +40,7 @@ if (Test-Path $source) {
         $shortcut.WorkingDirectory = "$mainFolder\$folderName"
         $shortcut.Description = "Telegram Clone $folderNumber"
         $shortcut.Save()
-        Write-Host "🔗 Shortcut: $folderName" -ForegroundColor Cyan
+        Write-Host "Shortcut: $folderName" -ForegroundColor Cyan
     }
     
     # Main folder shortcut
@@ -48,19 +48,20 @@ if (Test-Path $source) {
     $mainShortcut.TargetPath = $mainFolder
     $mainShortcut.Description = "Open Telegram Clones Folder"
     $mainShortcut.Save()
-    Write-Host "🔗 Shortcut: Telegram Clones Folder" -ForegroundColor Cyan
+    Write-Host "Shortcut: Telegram Clones Folder" -ForegroundColor Cyan
     
-    Write-Host "`n🎉 COMPLETED!" -ForegroundColor Green
-    Write-Host "📁 Folders created: TeleClone01 to TeleClone05" -ForegroundColor White
-    Write-Host "🔗 Shortcuts created: 6 total (5 clones + 1 folder)" -ForegroundColor White
-    Write-Host "📍 Location: $mainFolder" -ForegroundColor White
+    Write-Host "`nCOMPLETED!" -ForegroundColor Green
+    Write-Host "Folders created: TeleClone01 to TeleClone05" -ForegroundColor White
+    Write-Host "Shortcuts created: 6 total (5 clones + 1 folder)" -ForegroundColor White
+    Write-Host "Location: $mainFolder" -ForegroundColor White
     
     # Open the folder
     Start-Process "explorer.exe" -ArgumentList $mainFolder
 } else {
-    Write-Host "❌ Telegram not found at: $source" -ForegroundColor Red
-    Write-Host "   Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
+    Write-Host "Telegram not found at: $source" -ForegroundColor Red
+    Write-Host "Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
 }
+
 
 
 
