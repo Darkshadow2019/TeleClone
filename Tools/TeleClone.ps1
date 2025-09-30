@@ -1,3 +1,6 @@
+# Set encoding
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 $source = "$env:APPDATA\Telegram Desktop\Telegram.exe"
 $desktop = [Environment]::GetFolderPath("Desktop")
@@ -47,6 +50,7 @@ if (Test-Path $source) {
     Write-Host "Telegram not found at: $source" -ForegroundColor Red
     Write-Host "Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
 }
+
 
 
 
