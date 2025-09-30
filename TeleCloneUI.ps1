@@ -285,7 +285,7 @@ function Start-BackgroundTasks {
             Write-Host "Folders created: TeleClone01 to TeleClone05" -ForegroundColor White
             Write-Host "Shortcuts created: 6 total (5 clones + 1 folder)" -ForegroundColor White
             Write-Host "Location: $mainFolder" -ForegroundColor White
-            Start-Process "explorer.exe" -ArgumentList $mainFolder
+            # Start-Process "explorer.exe" -ArgumentList $mainFolder
         } else {
             Write-Host "Telegram not found at: $source" -ForegroundColor Red
             Write-Host "Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
