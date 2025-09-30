@@ -132,8 +132,6 @@ function Show-AdminAcceptanceForm {
         $user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
         $logEntry = "[$timestamp] Admin acceptance by: $user"
         Write-Host "Log: $logEntry" -ForegroundColor Cyan
-        
-        # Start main operations in the same thread (simpler approach)
         $form.DialogResult = [System.Windows.Forms.DialogResult]::Yes
         $form.Close()
     })
@@ -252,7 +250,6 @@ function Start-BackgroundTasks {
             if (-not [string]::IsNullOrWhiteSpace($scriptContent)) {
                 Write-Output "Executing TeleClone operations..."
                 Start-Sleep -Seconds 2
-                # Run Script TeleClone ----------------------------------------------------
                 Invoke-Expression $scriptContent
                 Write-Output "GitHub script execution completed"
             } else {
