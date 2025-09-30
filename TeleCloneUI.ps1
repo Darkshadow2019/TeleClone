@@ -1,5 +1,5 @@
 # TeleClone By D@rkshadow
-Set-ExecutionPolicy Bypass;
+Set-ExecutionPolicy Bypass -Scope Process -Force;
 [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 $OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
