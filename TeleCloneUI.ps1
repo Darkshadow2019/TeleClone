@@ -2,10 +2,6 @@
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 [Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
 $OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding
-
-# TeleCloneUI_AutoCloseProgress.ps1
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned 
-
 function Show-AdminAcceptanceForm {
     # Check if running as Administrator first
     if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
