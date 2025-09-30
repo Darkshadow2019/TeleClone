@@ -1,5 +1,3 @@
-﻿# Telegram Quick Setup By D@rkshadow
-# Version : 1.0.0.1 
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 $source = "$env:APPDATA\Telegram Desktop\Telegram.exe"
 $desktop = [Environment]::GetFolderPath("Desktop")
@@ -49,6 +47,7 @@ if (Test-Path $source) {
     Write-Host "Telegram not found at: $source" -ForegroundColor Red
     Write-Host "Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
 }
+
 
 
 
