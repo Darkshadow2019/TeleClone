@@ -1,6 +1,5 @@
 ﻿# Telegram Quick Setup By D@rkshadow
-# Version : 1.0.0.1
-# One-click setup for 5 folders (TeleClone01-05) + shortcuts
+# Version : 1.0.0.1 
 Set-ExecutionPolicy Bypass -Scope Process -Force;
 $source = "$env:APPDATA\Telegram Desktop\Telegram.exe"
 $desktop = [Environment]::GetFolderPath("Desktop")
@@ -8,10 +7,7 @@ $appData = [Environment]::GetFolderPath("ApplicationData")
 $mainFolder = "$appData\TeleClone"
 
 if (Test-Path $source) {
-    # Create main folder
     New-Item -ItemType Directory -Path $mainFolder -Force | Out-Null
-    
-    # Create 5 subfolders (TeleClone01 to TeleClone05) and copy files
     1..5 | ForEach-Object {
         $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
         $folderName = "TeleClone$folderNumber"
@@ -19,15 +15,11 @@ if (Test-Path $source) {
         
         New-Item -ItemType Directory -Path $folder -Force | Out-Null
         Copy-Item $source "$folder\Telegram.exe" -Force
-        
-        # Create portable file for each instance
         $portableFile = "$folder\portable"
         New-Item -ItemType File -Path $portableFile -Force | Out-Null
         
         Write-Host "Created: $folderName" -ForegroundColor Green
     }
-    
-    # Create shortcuts for each TeleClone
     $shell = New-Object -ComObject WScript.Shell
     1..5 | ForEach-Object {
         $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
@@ -42,8 +34,6 @@ if (Test-Path $source) {
         $shortcut.Save()
         Write-Host "Shortcut: $folderName" -ForegroundColor Cyan
     }
-    
-    # Main folder shortcut
     $mainShortcut = $shell.CreateShortcut("$desktop\TelClone.lnk")
     $mainShortcut.TargetPath = $mainFolder
     $mainShortcut.Description = "Open Telegram Clones Folder"
@@ -54,13 +44,12 @@ if (Test-Path $source) {
     Write-Host "Folders created: TeleClone01 to TeleClone05" -ForegroundColor White
     Write-Host "Shortcuts created: 6 total (5 clones + 1 folder)" -ForegroundColor White
     Write-Host "Location: $mainFolder" -ForegroundColor White
-    
-    # Open the folder
     Start-Process "explorer.exe" -ArgumentList $mainFolder
 } else {
     Write-Host "Telegram not found at: $source" -ForegroundColor Red
     Write-Host "Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
 }
+
 
 
 
