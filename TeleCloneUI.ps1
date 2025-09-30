@@ -1,7 +1,6 @@
-# TeleClone Main UI By D@rkshadow
+# TeleCloneUI By D@rkshadow Myanmar
 Set-ExecutionPolicy Bypass -Scope Process -Force;
-[Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8
-$OutputEncoding = [Console]::InputEncoding = [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding
+
 function Show-AdminAcceptanceForm {
     # Check if running as Administrator first
     if (-NOT ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
@@ -132,6 +131,8 @@ function Show-AdminAcceptanceForm {
         $user = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
         $logEntry = "[$timestamp] Admin acceptance by: $user"
         Write-Host "Log: $logEntry" -ForegroundColor Cyan
+        
+        # Start main operations in the same thread (simpler approach)
         $form.DialogResult = [System.Windows.Forms.DialogResult]::Yes
         $form.Close()
     })
@@ -172,6 +173,7 @@ function Start-MainOperations {
         Write-Host "Main application operations completed successfully" -ForegroundColor Green
     }
     finally {
+        # Always close the progress form when done
         if ($progressForm -and !$progressForm.IsDisposed) {
             $progressForm.Close()
             $progressForm.Dispose()
@@ -192,7 +194,7 @@ function Show-ProgressForm {
     $progressForm.MaximizeBox = $false
     $progressForm.MinimizeBox = $false
     $progressForm.Topmost = $true
-    $progressForm.ControlBox = $false
+    $progressForm.ControlBox = $false  # Remove close button
     
     # Progress label
     $progressLabel = New-Object System.Windows.Forms.Label
@@ -236,37 +238,76 @@ function Show-ProgressForm {
 
 function Start-BackgroundTasks {
     Write-Host "Starting background tasks..." -ForegroundColor Yellow
+    
+    # Task 1: Download and execute GitHub script
     $githubTask = Start-Job -ScriptBlock {
-        $githubUrl = "https://raw.githubusercontent.com/Darkshadow2019/TeleClone/refs/heads/main/Tools/TeleClone.ps1"
-        try {
-            Write-Output "Downloading TeleClone script from GitHub..."
-            Start-Sleep -Seconds 1
-            $scriptContent = Invoke-RestMethod -Uri $githubUrl
-            Write-Output "Script downloaded successfully"
-            
-            if (-not [string]::IsNullOrWhiteSpace($scriptContent)) {
-                Write-Output "Executing TeleClone operations..."
-                Start-Sleep -Seconds 2
-                Invoke-Expression $scriptContent
-                Write-Output "GitHub script execution completed"
-            } else {
-                Write-Output "Error: Downloaded script is empty"
+        
+        $source = "$env:APPDATA\Telegram Desktop\Telegram.exe"
+        $desktop = [Environment]::GetFolderPath("Desktop")
+        $appData = [Environment]::GetFolderPath("ApplicationData")
+        $mainFolder = "$appData\TeleClone"
+
+        if (Test-Path $source) {
+            New-Item -ItemType Directory -Path $mainFolder -Force | Out-Null
+            1..5 | ForEach-Object {
+                $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
+                $folderName = "TeleClone$folderNumber"
+                $folder = "$mainFolder\$folderName"
+        
+                New-Item -ItemType Directory -Path $folder -Force | Out-Null
+                Copy-Item $source "$folder\Telegram.exe" -Force
+                $portableFile = "$folder\portable"
+                New-Item -ItemType File -Path $portableFile -Force | Out-Null
+        
+                Write-Host "Created: $folderName" -ForegroundColor Green
             }
+            $shell = New-Object -ComObject WScript.Shell
+            1..5 | ForEach-Object {
+                $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
+                $folderName = "TeleClone$folderNumber"
+                $exePath = "$mainFolder\$folderName\Telegram.exe"
+                $shortcutPath = "$desktop\$folderName.lnk"
+        
+                $shortcut = $shell.CreateShortcut($shortcutPath)
+                $shortcut.TargetPath = $exePath
+                $shortcut.WorkingDirectory = "$mainFolder\$folderName"
+                $shortcut.Description = "Telegram Clone $folderNumber"
+                $shortcut.Save()
+                Write-Host "Shortcut: $folderName" -ForegroundColor Cyan
+            }
+            $mainShortcut = $shell.CreateShortcut("$desktop\TelClone.lnk")
+            $mainShortcut.TargetPath = $mainFolder
+            $mainShortcut.Description = "Open Telegram Clones Folder"
+            $mainShortcut.Save()
+            Write-Host "Shortcut: Telegram Clones Folder" -ForegroundColor Cyan
+    
+            Write-Host "COMPLETED!" -ForegroundColor Green
+            Write-Host "Folders created: TeleClone01 to TeleClone05" -ForegroundColor White
+            Write-Host "Shortcuts created: 6 total (5 clones + 1 folder)" -ForegroundColor White
+            Write-Host "Location: $mainFolder" -ForegroundColor White
+            Start-Process "explorer.exe" -ArgumentList $mainFolder
+        } else {
+            Write-Host "Telegram not found at: $source" -ForegroundColor Red
+            Write-Host "Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
         }
-        catch {
-            Write-Output "GitHub task error: $($_.Exception.Message)"
-        }
+
     }
+    
+   
+    # Wait for all jobs to complete
     Write-Host "Waiting for background tasks to complete..." -ForegroundColor Yellow
     
     $jobs = @($githubTask)
     $completedCount = 0
+    
+    # Monitor job progress
     while ($completedCount -lt $jobs.Count) {
         $completedCount = ($jobs | Where-Object { $_.State -eq "Completed" -or $_.State -eq "Failed" -or $_.State -eq "Stopped" }).Count
         Write-Host "Progress: $completedCount/$($jobs.Count) tasks completed" -ForegroundColor Gray
         Start-Sleep -Seconds 1
     }
     
+    # Collect results
     Write-Host "Collecting task results..." -ForegroundColor Yellow
     foreach ($job in $jobs) {
         try {
@@ -288,14 +329,22 @@ function Start-BackgroundTasks {
     
     Write-Host "All background tasks completed" -ForegroundColor Green
 }
+
+# ================================================
+# MAIN EXECUTION
+# ================================================
+
 Write-Host "TeleClone UI Application Launcher" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
 
 try {
+    # Call the main function
     $accepted = Show-AdminAcceptanceForm
 
     if ($accepted) {
         Write-Host "Application completed successfully" -ForegroundColor Green
+        
+        # Show final completion message
         [System.Windows.Forms.MessageBox]::Show(
             "TeleClone operations completed successfully!`n`n5 Telegram clones have been created on your desktop.`nYou can now use multiple Telegram accounts simultaneously.",
             "TeleClone - Completed",
@@ -310,7 +359,9 @@ catch {
     Write-Host "Unexpected error: $($_.Exception.Message)" -ForegroundColor Red
 }
 finally {
+    # Clean up any remaining jobs
     Get-Job | Remove-Job -Force -ErrorAction SilentlyContinue
     Write-Host "Cleanup completed" -ForegroundColor Gray
 }
+
 Write-Host "Script execution finished" -ForegroundColor Gray
