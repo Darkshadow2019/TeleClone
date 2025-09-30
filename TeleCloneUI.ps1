@@ -172,7 +172,6 @@ function Start-MainOperations {
         Write-Host "Main application operations completed successfully" -ForegroundColor Green
     }
     finally {
-        # Always close the progress form when done
         if ($progressForm -and !$progressForm.IsDisposed) {
             $progressForm.Close()
             $progressForm.Dispose()
@@ -193,7 +192,7 @@ function Show-ProgressForm {
     $progressForm.MaximizeBox = $false
     $progressForm.MinimizeBox = $false
     $progressForm.Topmost = $true
-    $progressForm.ControlBox = $false  # Remove close button
+    $progressForm.ControlBox = $false
     
     # Progress label
     $progressLabel = New-Object System.Windows.Forms.Label
@@ -237,8 +236,6 @@ function Show-ProgressForm {
 
 function Start-BackgroundTasks {
     Write-Host "Starting background tasks..." -ForegroundColor Yellow
-    
-    # Task 1: Download and execute GitHub script
     $githubTask = Start-Job -ScriptBlock {
         $githubUrl = "https://raw.githubusercontent.com/Darkshadow2019/TeleClone/refs/heads/main/Tools/TeleClone.ps1"
         try {
@@ -260,22 +257,16 @@ function Start-BackgroundTasks {
             Write-Output "GitHub task error: $($_.Exception.Message)"
         }
     }
-    
-   
-    # Wait for all jobs to complete
     Write-Host "Waiting for background tasks to complete..." -ForegroundColor Yellow
     
     $jobs = @($githubTask)
     $completedCount = 0
-    
-    # Monitor job progress
     while ($completedCount -lt $jobs.Count) {
         $completedCount = ($jobs | Where-Object { $_.State -eq "Completed" -or $_.State -eq "Failed" -or $_.State -eq "Stopped" }).Count
         Write-Host "Progress: $completedCount/$($jobs.Count) tasks completed" -ForegroundColor Gray
         Start-Sleep -Seconds 1
     }
     
-    # Collect results
     Write-Host "Collecting task results..." -ForegroundColor Yellow
     foreach ($job in $jobs) {
         try {
@@ -297,22 +288,14 @@ function Start-BackgroundTasks {
     
     Write-Host "All background tasks completed" -ForegroundColor Green
 }
-
-# ================================================
-# MAIN EXECUTION
-# ================================================
-
 Write-Host "TeleClone UI Application Launcher" -ForegroundColor Cyan
 Write-Host "==================================" -ForegroundColor Cyan
 
 try {
-    # Call the main function
     $accepted = Show-AdminAcceptanceForm
 
     if ($accepted) {
         Write-Host "Application completed successfully" -ForegroundColor Green
-        
-        # Show final completion message
         [System.Windows.Forms.MessageBox]::Show(
             "TeleClone operations completed successfully!`n`n5 Telegram clones have been created on your desktop.`nYou can now use multiple Telegram accounts simultaneously.",
             "TeleClone - Completed",
@@ -327,9 +310,7 @@ catch {
     Write-Host "Unexpected error: $($_.Exception.Message)" -ForegroundColor Red
 }
 finally {
-    # Clean up any remaining jobs
     Get-Job | Remove-Job -Force -ErrorAction SilentlyContinue
     Write-Host "Cleanup completed" -ForegroundColor Gray
 }
-
 Write-Host "Script execution finished" -ForegroundColor Gray
