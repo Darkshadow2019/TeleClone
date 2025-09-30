@@ -1,4 +1,5 @@
 ﻿# Telegram Quick Setup By D@rkshadow
+# Version : 1.0.0.1
 # One-click setup for 5 folders (TeleClone01-05) + shortcuts
 
 $source = "$env:APPDATA\Telegram Desktop\Telegram.exe"
@@ -59,4 +60,5 @@ if (Test-Path $source) {
 } else {
     Write-Host "❌ Telegram not found at: $source" -ForegroundColor Red
     Write-Host "   Please make sure Telegram Desktop is installed" -ForegroundColor Yellow
+
 }
