@@ -346,7 +346,7 @@ try {
         
         # Show final completion message
         [System.Windows.Forms.MessageBox]::Show(
-            "TeleClone operations completed successfully!`n`n5 Telegram clones have been created on your desktop.`nYou can now use multiple Telegram accounts simultaneously.",
+            "TeleClone လုပ်ဆောင်ချက်များ အောင်မြင်စွာ ပြီးဆုံးသွားပါပြီ!`n`n5 Telegram Clones ကို သင့် desktop ပေါ်တွင် ဖန်တီးထားပါသည်။`nယခု သင်သည် Telegram အကောင့်များစွာကို တစ်ပြိုင်နက် အသုံးပြုနိုင်ပါသည်။",
             "TeleClone - Completed",
             [System.Windows.Forms.MessageBoxButtons]::OK,
             [System.Windows.Forms.MessageBoxIcon]::Information
