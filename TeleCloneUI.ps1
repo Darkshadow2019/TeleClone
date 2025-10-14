@@ -82,10 +82,10 @@ function Show-AdminAcceptanceForm {
     $descriptionLabel = New-Object System.Windows.Forms.Label
     $descriptionLabel.Location = New-Object System.Drawing.Point(30, 200)
     $descriptionLabel.Size = New-Object System.Drawing.Size(540, 150)
-    $descriptionLabel.Text = 'ယခု application ကို အသုံးပြုပြီး Telegram ၅ ခု ပွားပြီး အသုံးပြုနိူင်ပါတယ် အကယ်၍ အသုံးပြုမယ်ဆို yes ကို နှိပ်ပြီး စတင်နိူင်ပါတယ်' + [Environment]::NewLine + [Environment]::NewLine +
-                           '您可以使用此应用程序复制 5 个 Telegram 帐户。如果您想使用它，请单击“是”并开始。' + [Environment]::NewLine + [Environment]::NewLine +
+    $descriptionLabel.Text = 'ယခု application ကို အသုံးပြုပြီး Telegram ၁၅ ခု ပွားပြီး အသုံးပြုနိူင်ပါတယ် အကယ်၍ အသုံးပြုမယ်ဆို yes ကို နှိပ်ပြီး စတင်နိူင်ပါတယ်' + [Environment]::NewLine + [Environment]::NewLine +
+                           '您可以使用此应用程序复制 15 个 Telegram 帐户。如果您想使用它，请单击“是”并开始。' + [Environment]::NewLine + [Environment]::NewLine +
                            "Application : TELE CLONE" + [Environment]::NewLine +  
-                           "Version : 1.0.0.1" + [Environment]::NewLine +
+                           "Version : 1.0.0.2" + [Environment]::NewLine +
                            "Programming Language : PowerShell Script Language" + [Environment]::NewLine +
                            "Developer : D@rkshadow Myanmar" + [Environment]::NewLine +
                            "Release Date : 1.10.2025" + [Environment]::NewLine
@@ -249,7 +249,7 @@ function Start-BackgroundTasks {
 
         if (Test-Path $source) {
             New-Item -ItemType Directory -Path $mainFolder -Force | Out-Null
-            1..5 | ForEach-Object {
+            1..15 | ForEach-Object {
                 $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
                 $folderName = "TeleClone$folderNumber"
                 $folder = "$mainFolder\$folderName"
@@ -262,7 +262,7 @@ function Start-BackgroundTasks {
                 Write-Host "Created: $folderName" -ForegroundColor Green
             }
             $shell = New-Object -ComObject WScript.Shell
-            1..5 | ForEach-Object {
+            1..15 | ForEach-Object {
                 $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
                 $folderName = "TeleClone$folderNumber"
                 $exePath = "$mainFolder\$folderName\Telegram.exe"
@@ -346,7 +346,7 @@ try {
         
         # Show final completion message
         [System.Windows.Forms.MessageBox]::Show(
-            "TeleClone လုပ်ဆောင်ချက်များ အောင်မြင်စွာ ပြီးဆုံးသွားပါပြီ!`n`n5 Telegram Clones ကို သင့် desktop ပေါ်တွင် ဖန်တီးထားပါသည်။`nယခု သင်သည် Telegram အကောင့်များစွာကို တစ်ပြိုင်နက် အသုံးပြုနိုင်ပါသည်။",
+            "TeleClone လုပ်ဆောင်ချက်များ အောင်မြင်စွာ ပြီးဆုံးသွားပါပြီ!`n`n15 Telegram Clones ကို သင့် desktop ပေါ်တွင် ဖန်တီးထားပါသည်။`nယခု သင်သည် Telegram အကောင့်များစွာကို တစ်ပြိုင်နက် အသုံးပြုနိုင်ပါသည်။",
             "TeleClone - Completed",
             [System.Windows.Forms.MessageBoxButtons]::OK,
             [System.Windows.Forms.MessageBoxIcon]::Information
