@@ -253,7 +253,12 @@ function Start-BackgroundTasks {
                 $folderNumber = "{0:D2}" -f $_  # 01, 02, 03, 04, 05
                 $folderName = "TeleClone$folderNumber"
                 $folder = "$mainFolder\$folderName"
-        
+
+                if (Test-Path -Path $folder -PathType Container) {
+                   Write-Host "SKIPPED: $folderName (Already Exists)" -ForegroundColor Yellow
+                   return
+                }
+                
                 New-Item -ItemType Directory -Path $folder -Force | Out-Null
                 Copy-Item $source "$folder\Telegram.exe" -Force
                 $portableFile = "$folder\portable"
